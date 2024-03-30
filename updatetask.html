@@ -1,0 +1,28 @@
+<html lang='en'>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+    <body>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.errors }}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{task.instance.title}}">
+        </div>
+        <div class="mb-3">
+            <label for="task" class="form-label">Task</label>
+            <textarea class="form-control" id="task" name="task" rows="5"> {{task.instance.task}} </textarea>
+        </div>
+        <div class="mb-3">
+            <label for="completed"> Completed</label>
+            <input type="checkbox" id="completed" name="completed" {% if task.instance.completed %}checked{% endif %}>
+        </div>
+        <button type="submit" class="btn btn-primary">Edit</button>
+    </form>
+    {% endif %}
+    </body>
+    </html>

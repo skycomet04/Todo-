@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" >
+    <head>
+        <meta charset="utf-8">
+        <title>{{title}}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/todo.css">
+	</head>
+
+	<body class="container-fluid">
+
+	{% if messages %}
+	{% for message in messages %}
+	<div class="alert alert-info">
+		<strong>{{message}}</strong>
+	</div>
+	{% endfor %}
+	{% endif %}
+
+	<div class="row">
+		<h1><i>Task ToDo</i></h1>
+			<hr>
+			{% if not user.is_authenticated %}
+			<p><a href="{% url 'log_in' %}">Login</a></p>
+			{% else %}
+			<p><a href="{% url 'logout' %}">LogOut</a></p>
+			{% endif %}
+		<div class="col-md-8">
+			<table class="table table-hover" id="example">
+				<thead>					
+					<tr>
+						<th>Task Id</th>
+						<th>Task Title</th>
+						<th>Task Completed</th>
+						<th>Update</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for i in item_list %}
+					<tr>
+						<td>{{i.id}}</td>
+						<td>{% if i.completed == True %}
+							<strike>{{i.title}} </strike>
+							{% else %}
+							{{i.title}}
+							{% endif %}
+						</td>
+						<td>{{i.completed}}</td>
+						<td><a href="{% url 'updateitem' i.id %}"><button type="submit" class="btn btn-primary" >Edit</button></a></td>
+						<td><form action="/del/{{i.id}}" method="POST" style=" padding-right: 4%; padding-bottom: 3%;">
+							{% csrf_token %}
+							<button value="remove" type="submit" class="btn btn-primary"><span class="glyphicon"></span>remove</button>
+						</form>
+						</td>
+					</tr>
+					{% endfor%}
+					</tbody>
+				</table>
+			</div>
+		   
+		<div class="col-md-3" >
+		<div class="submit_form">
+			<h3>Create Task</h3>
+			<form method="POST" action="">
+			{% csrf_token %}
+			<div class="mb-3">
+				<label for="title" class="form-label">Title</label>
+				<input type="text" class="form-control" id="title" name="title" >
+			</div>
+			<div class="mb-3">
+				<label for="task" class="form-label">Task</label>
+				<textarea class="form-control" id="task" name="task" rows="5"></textarea>
+			</div>
+			<div class="mb-3">
+				<input type="checkbox" id="completed" name="completed" value="True">
+				<label for="completed"> Completed</label>
+			</div>
+			
+			<center>
+				<button type="submit" class="btn bg-primary-subtle">Create</button>
+			</center>
+		</form>
+	</div>
+	</div>
+</div>
+<div class="col-md-8">
+<div class="card">
+	<center><h3>Incompleted Tasks</h3></center>
+	<br><br>
+	{% for i in item_list %}
+	{% if not i.completed %}
+	<center><b>{{i.title}}</b></center>
+	<hr/>
+	{{i.date}}
+	<hr/>
+	{{i.task}}
+	<br />
+	{{i.completed}}
+	<br><br>
+	{% endif %}
+	{% endfor %}
+ </div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
